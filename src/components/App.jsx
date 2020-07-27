@@ -1,18 +1,35 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "./Header";
-import Note from "./Note";
 import Footer from "./Footer";
-import notes from "../notes";
+import Note from "./Note";
+import CreateArea from "./CreateArea";
 
 function App() {
+  const [notes, setNotes] = useState([]);
+
+  function addnote(note) {
+    setNotes(prevnotes => {
+      return [...prevnotes, note];
+    });
+  }
+  function deleteNote(id) {
+    setNotes(prevnotes => {
+      return prevnotes.filter((note, index) => {
+        return index !== id;
+      });
+    });
+  }
   return (
     <div>
       <Header />
-      {notes.map(noteitem => (
+      <CreateArea onAdd={addnote} />
+      {notes.map((note, index) => (
         <Note
-          key={noteitem.key}
-          title={noteitem.title}
-          content={noteitem.content}
+          key={index}
+          id={index}
+          title={note.title}
+          content={note.content}
+          delete={deleteNote}
         />
       ))}
 
@@ -20,4 +37,5 @@ function App() {
     </div>
   );
 }
+
 export default App;
